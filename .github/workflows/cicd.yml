@@ -1,0 +1,30 @@
+name: Workflows File For CI/CD
+
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  deployment:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Application Level Dependencies
+        run: |
+          yarn install
+      - name: Delete if Exists The Process
+        run: |
+          pm2 delete node-js || true
+      - name: Start The Application
+        run: |
+          pm2 start "yarn serve" --name="node-js"
+
+      
