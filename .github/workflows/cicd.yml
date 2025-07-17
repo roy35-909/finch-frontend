@@ -12,6 +12,7 @@ on:
 
 jobs:
   testing:
+    
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +30,7 @@ jobs:
           yarn run test
 
   builds:
+    needs: testing
     runs-on: ubuntu-latest
 
     steps:
@@ -46,6 +48,7 @@ jobs:
           yarn run build
 
   deploy:
+    needs: builds
     runs-on: self-hosted
 
     steps:
