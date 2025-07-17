@@ -26,6 +26,3 @@ jobs:
       - name: Start The Application
         run: |
           pm2 start "yarn serve" --name="node-js"
-
-      
- 
