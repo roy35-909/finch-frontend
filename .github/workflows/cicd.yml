@@ -11,19 +11,53 @@ on:
 
 
 jobs:
-  deployment:
+  testing:
     runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Node js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+      - name: Install Application Level Dependencies
+        run: |
+          yarn install
+      - name: Run Unit tests
+        run: |
+          yarn run test
 
-    env:
-      VUE_APP_API_URL : ${{ secrets.VUE_APP_API_URL }}
-      VUE_APP_STRIPE_PUBLIC_KEY: ${{ secrets.VUE_APP_STRIPE_PUBLIC_KEY }}
+  builds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Node js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+      - name: Install Application Level Dependencies
+        run: |
+          yarn install
+      - name: Build Application
+        run: |
+          yarn run build
+
+  deploy:
+    runs-on: self-hosted
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install Application Level Dependencies
         run: |
           yarn install
-      - name: Build Application
+      - name: Deploy Application
         run: |
-          yarn build
+          pm2 delete "node-app" || true
+          pm2 start "yarn run start" --name "node-app"
+          pm2 save"
+          
+    
