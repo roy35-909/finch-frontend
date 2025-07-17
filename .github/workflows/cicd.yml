@@ -14,15 +14,16 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
 
+
+    env:
+      VUE_APP_API_URL : ${{ secrets.VUE_APP_API_URL }}
+      VUE_APP_STRIPE_PUBLIC_KEY: ${{ secrets.VUE_APP_STRIPE_PUBLIC_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install Application Level Dependencies
         run: |
           yarn install
-      - name: Delete if Exists The Process
+      - name: Build Application
         run: |
-          pm2 delete node-js || true
-      - name: Start The Application
-        run: |
-          pm2 start "yarn serve" --name="node-js"
+          yarn build
