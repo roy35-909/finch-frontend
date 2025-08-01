@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checker Added
+        run : start_time=$(date +%s)
+
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install Dependencies
@@ -27,6 +30,14 @@ jobs:
       - name: Install Application Level Dependencies
         run: |
           yarn install
+
+      - name: Checker end
+        run : | 
+          end_time=$(date +%s)
+          echo "start=$start_time" >> $GITHUB_ENV
+          echo "end=$end_time" >> $GITHUB_ENV
+          
+
 
       - name: Run Carbon Estimator
         run: |
