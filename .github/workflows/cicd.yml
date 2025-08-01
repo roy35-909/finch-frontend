@@ -1,6 +1,5 @@
 name: Workflows File For CI/CD
 
-
 on:
   push:
     branches:
@@ -9,41 +8,43 @@ on:
     branches:
       - main
 
-
 jobs:
   testing:
-    
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checker Added
-        run : start_time=$(date +%s)
-
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Install Dependencies
         run: pip install psutil
-      - name: Setup Node js
+
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '22'
+
       - name: Install Application Level Dependencies
+        run: yarn install
+
+      - name: Record Start Time
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Run Your Test or App
         run: |
-          yarn install
+          echo "Running main job..."
+          sleep 10  # Simulate CI job
 
-      - name: Checker end
-        run : | 
-          end_time=$(date +%s)
-          echo "start=$start_time" >> $GITHUB_ENV
-          echo "end=$end_time" >> $GITHUB_ENV
-          
-
+      - name: Record End Time and Duration
+        run: |
+          END_TIME=$(date +%s)
+          echo "END_TIME=$END_TIME" >> $GITHUB_ENV
+          echo "DURATION=$((END_TIME - START_TIME))" >> $GITHUB_ENV
 
       - name: Run Carbon Estimator
         run: |
-          duration=$((${{ env.end }} - ${{ env.start }}))
-          echo "Measuring for $duration seconds"
-          python ci_carbon_estimator.py --duration $duration
+          echo "Duration = $DURATION seconds"
+          python ci_carbon_estimator.py --duration $DURATION
 
   builds:
     needs: testing
@@ -52,35 +53,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup Node js
+
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '22'
+
       - name: Install Application Level Dependencies
-        run: |
-          yarn install
+        run: yarn install
+
       - name: Build Application
-        run: |
-          yarn run build
-      - name: Run Carbon Estimator
-        run: |
-          duration=$((${{ env.end }} - ${{ env.start }}))
-          echo "Measuring for $duration seconds"
-          python ci_carbon_estimator.py --duration $duration
+        run: yarn run build
 
-  deploy:
-
-    runs-on: self-hosted
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install Application Level Dependencies
+      - name: Run Carbon Estimator (Optional)
         run: |
-          yarn install
-      - name: Deploy Application
-        run: |
-          pm2 delete "node-app" || true
-          pm2 start "yarn run start" --name "node-app"
-          pm2 save"
-          
+          echo "Duration = $DURATION seconds"
+          python ci_carbon_estimator.py --duration $DURATION

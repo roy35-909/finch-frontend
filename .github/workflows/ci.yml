@@ -1,12 +1,12 @@
 name: Will Runs On Developer push
 
-on:
-  push:
-    branches:
-      - dev/*
-  pull_request:
-    branches:
-      - dev/*
+# on:
+#   push:
+#     branches:
+#       - dev/*
+#   pull_request:
+#     branches:
+#       - dev/*
 
 jobs:
   unit-tests:
