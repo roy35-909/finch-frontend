@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: pip install psutil
       - name: Setup Node js
         uses: actions/setup-node@v2
         with:
@@ -28,6 +30,11 @@ jobs:
       - name: Run Unit tests
         run: |
           yarn run test
+      - name: Run Carbon Estimator
+        run: |
+          duration=$((${{ env.end }} - ${{ env.start }}))
+          echo "Measuring for $duration seconds"
+          python ci_carbon_estimator.py --duration $duration
 
   builds:
     needs: testing
@@ -46,6 +53,11 @@ jobs:
       - name: Build Application
         run: |
           yarn run build
+      - name: Run Carbon Estimator
+        run: |
+          duration=$((${{ env.end }} - ${{ env.start }}))
+          echo "Measuring for $duration seconds"
+          python ci_carbon_estimator.py --duration $duration
 
   deploy:
 
@@ -63,4 +75,3 @@ jobs:
           pm2 start "yarn run start" --name "node-app"
           pm2 save"
           
-    
