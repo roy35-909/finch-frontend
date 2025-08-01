@@ -50,6 +50,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Record Start Time
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Install Dependencies
+        run: pip install psutil
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -64,7 +70,13 @@ jobs:
       - name: Build Application
         run: yarn run build
 
-      - name: Run Carbon Estimator (Optional)
+      - name: Record End Time and Duration
+        run: |
+          END_TIME=$(date +%s)
+          echo "END_TIME=$END_TIME" >> $GITHUB_ENV
+          echo "DURATION=$((END_TIME - START_TIME))" >> $GITHUB_ENV
+
+      - name: Run Carbon Estimator
         run: |
           echo "Duration = $DURATION seconds"
           python ci_carbon_estimator.py --duration $DURATION
