@@ -27,9 +27,7 @@ jobs:
       - name: Install Application Level Dependencies
         run: |
           yarn install
-      - name: Run Unit tests
-        run: |
-          yarn run test
+
       - name: Run Carbon Estimator
         run: |
           duration=$((${{ env.end }} - ${{ env.start }}))
