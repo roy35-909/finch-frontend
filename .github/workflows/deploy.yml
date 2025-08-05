@@ -1,0 +1,29 @@
+name: Deploy Docker Compose App
+
+on:
+  push:
+    branches: [dev] # Change this to your default branch if different
+  # workflow_dispatch: # Allows manual triggering
+
+jobs:
+  deploy:
+    runs-on: ostad-runner # This ensures the workflow runs on your machine
+
+    steps:
+      - name: Set up Docker Compose
+        run: |
+          docker-compose --version
+      - name: Checking out code
+        run: |
+          cd /home/ubuntu/finch/finch-frontend
+          git stash
+          git fetch
+          git checkout dev
+          git pull origin dev
+          cd ..
+          # Build and start the containers
+          docker-compose up -d --build
+
+          # Remove unused images
+          docker image prune -f
+          docker ps
