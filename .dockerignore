@@ -6,6 +6,4 @@ docker-compose.yml
 
 /dist
 
-.env
-
 *.dll
