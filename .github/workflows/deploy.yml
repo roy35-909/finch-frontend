@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ostad-runner # This ensures the workflow runs on your machine
+    runs-on: ostad # This ensures the workflow runs on your machine
 
     steps:
       - name: Set up Docker Compose
@@ -20,10 +20,10 @@ jobs:
           git fetch
           git checkout dev
           git pull origin dev
-          # cd ..
-          # # Build and start the containers
-          # docker-compose up -d --build
+          cd ..
+          # Build and start the containers
+          docker-compose up -d --build
 
-          # # Remove unused images
-          # docker image prune -f
-          # docker ps
+          # Remove unused images
+          docker image prune -f
+          docker ps
