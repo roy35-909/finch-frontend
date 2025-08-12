@@ -2,7 +2,7 @@ name: Deploy Docker Compose App
 
 on:
   push:
-    branches: [dev] # Change this to your default branch if different
+    branches: [prod] # Change this to your default branch if different
   # workflow_dispatch: # Allows manual triggering
 
 jobs:
@@ -15,15 +15,15 @@ jobs:
           docker-compose --version
       - name: Checking out code
         run: |
-          cd /home/ubuntu/finch-frontend
+          cd /home/ubuntu//prod/finch-frontend
           git stash
           git fetch
           git checkout dev
           git pull origin dev
-          # cd ..
-          # # Build and start the containers
-          # docker-compose up -d --build
+          cd ..
+          # Build and start the containers
+          docker-compose up -d --build
 
-          # # Remove unused images
-          # docker image prune -f
-          # docker ps
+          # Remove unused images
+          docker image prune -f
+          docker ps

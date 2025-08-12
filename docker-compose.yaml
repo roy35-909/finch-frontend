@@ -1,0 +1,15 @@
+services:
+  frontend:
+    container_name: finch-frontend
+    image: finch-frontend:latest
+    build:
+      context: finch-frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://13.212.56.200:5000/api
+    # depends_on:
+    #   - backend
+    # networks:
+    #   - finch-network
